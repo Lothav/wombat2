@@ -20,16 +20,16 @@ private:
 
     const int JUMP_2_ADDRS = 2;
 
+    ifstream *file;
+
     int pc = 0, found_exit = false, value, byte_size;
     unsigned long current, espaco, tamanho = 0;
     string name, line, posic;
-    pair <int, int> memoria;
-    ifstream *file;
 
     LabelTable lab;
-    DataTable dat;
-
     vector< LabelTable > labels; //mapa dos lables
+
+    DataTable dat;
     vector< DataTable > data;   //mapa dos nomes da memoria
 
 public:
