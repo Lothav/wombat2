@@ -15,7 +15,7 @@ using namespace std;
 class FirstPass {
 
 private:
-    int pc = 0, flag = 0, b, a;
+    int pc = 0, found_exit = false, b, a;
     unsigned long atual, espaco, tamanho = 0;
     string nome, linha, posic;
     pair <int, int> memoria;

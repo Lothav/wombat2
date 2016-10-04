@@ -23,7 +23,7 @@ void FirstPass::doFirstPass(void){
                 nome = linha.substr(atual, linha.size());
                 espaco = nome.find_first_of(" ");
                 nome = nome.substr(0, espaco);
-                if(flag == 1){
+                if(found_exit){
                     //achou um .data
                     linha = linha.substr( (espaco+1), linha.size() );
                     atual = linha.find_first_of("0123456789");
@@ -35,12 +35,12 @@ void FirstPass::doFirstPass(void){
                     memoria = make_pair( a, b); // < bytes , numero >
                     data[nome] = memoria; // < nome , memoria >
                 }
-                if(flag == 0){
+                if(!found_exit){
                     //achou uma instrucao
                     pc += 2;
                     if(nome.compare("exit") == 0){
                         //terminou a parte das instrucoes
-                        flag = 1;
+                        found_exit = true;
                     }
                 }
             }
