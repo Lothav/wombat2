@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "firstPass.hpp"
+#include "secondPass.hpp"
 
 using namespace std;
 
@@ -15,8 +16,10 @@ int main( int argc, char *argv[] ){
 
     FirstPass firstPass(file);
     firstPass.doFirstPass();
-    data = firstPass.getData(); /* Get .data table */
     labels = firstPass.getLabels(); /* Get label table */
+    data = firstPass.getData(); /* Get .data table */
+
+    SecondPass secondPass(labels, data, file);
 
     file.close();
 

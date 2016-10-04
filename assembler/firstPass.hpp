@@ -25,7 +25,7 @@ private:
     map<string, pair<int, int> > data; //mapa dos nomes da memoria
 
 public:
-    FirstPass (ifstream &entrada);
+    FirstPass (ifstream &file);
     void doFirstPass(void);
     map<string, pair<int, int> > getData();
     map<string, int> getLabels();
