@@ -5,19 +5,20 @@
 using namespace std;
 
 int main( int argc, char *argv[] ){
-    ifstream entrada;
-    map<string, pair<int, int> > data;
 
-    entrada.open(argv[1]);
-    if( !entrada.is_open() ){ //erro
-        return(1);
-    }
-    FirstPass firstPass(entrada);
+    ifstream file;
+    map<string, pair<int, int> > data;
+    map<string, int> labels;
+
+    file.open(argv[1]);
+    if( !file.is_open() ){  return(ENOENT); } /* No such file or directory */
+
+    FirstPass firstPass(file);
     firstPass.doFirstPass();
     data = firstPass.getData();
     labels = firstPass.getLabels();
-    //readfile(entrada); //primeira passada (mapeia as lables)
-    entrada.close();
+
+    file.close();
 
     return 0;
 }
