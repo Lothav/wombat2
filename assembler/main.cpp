@@ -19,7 +19,7 @@ int main( int argc, char *argv[] ){
     data = firstPass.getData(); /* Get .data table */
 
     SecondPass secondPass(data, labels, file);
-    secondPass.doSecondPass();
+    secondPass.doSecondPass(argv[1]);
 
     file.close();
 

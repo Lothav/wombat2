@@ -20,7 +20,7 @@ private:
 
     const int JUMP_2_ADDRS = 2;
 
-    int pc = 0, found_exit = false, b, a;
+    int pc = 0, found_exit = false, value, byte_size;
     unsigned long current, espaco, tamanho = 0;
     string name, line, posic;
     pair <int, int> memoria;

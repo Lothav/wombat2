@@ -23,7 +23,7 @@ class SecondPass {
 
 public:
     SecondPass(  vector< DataTable > data, vector< LabelTable >  labels,ifstream &file);
-    void doSecondPass();
+    void doSecondPass(string name_out);
 };
 
 

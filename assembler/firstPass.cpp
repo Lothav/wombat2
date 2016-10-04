@@ -21,28 +21,29 @@ void FirstPass::doFirstPass(void){
             if( isalpha(line[current]) ){
 
                 name = line.substr(current, line.size());
-                espaco = name.find_first_of(" ");
+                espaco = name.find_first_of("\t: ");
                 name = name.substr(0, espaco);
 
                 /* wait for exit call
                  * .data step */
                 if(found_exit){
-                    line = line.substr( (espaco+1), line.size() );
-                    current = line.find_first_of("0123456789");
-                    a = atoi( line.c_str() );
 
-                    posic = line.substr(( current + JUMP_2_ADDRS ), line.size());
-                    posic = posic.substr(0, posic.find_first_of(" 	 "));
-                    b = atoi( posic.c_str() );
+                    current = line.find_first_of("0123456789");
+                    line = line.substr( current, line.size() );
+                    byte_size = atoi( line.c_str() );
+
+                    posic = line.substr(2 , line.size());
+                    //posic = posic.substr(0, posic.find_first_of(" 	 "));
+                    value = atoi( posic.c_str() );
 
                     dat.label = name;
-                    dat.byte_size = a;
-                    dat.value = b;
+                    dat.byte_size = byte_size;
+                    dat.value = value;
+                    dat.memPos = pc;
 
                     data.push_back(dat);
 
-                    //memoria = make_pair( a, b); // < bytes , numero >
-                    //[name] = memoria; // < name , memoria >
+                    pc += JUMP_2_ADDRS;
                 }
 
                 /* instruction count memory addrs
@@ -58,7 +59,7 @@ void FirstPass::doFirstPass(void){
             }
             /* found label */
             if(line[current] == '_'){
-                tamanho = line.find(':');
+                tamanho =   line.find(':');
                 lab.label = line.substr(0, tamanho);
                 lab.memPos = pc;
                 labels.push_back(lab);
