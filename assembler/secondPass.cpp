@@ -11,3 +11,13 @@ SecondPass::SecondPass(map<string, int> labels_map,
     labels = labels_map;
     data = data_map;
 }
+
+void SecondPass::doSecondPass(){
+    while( getline( (*file), line ) ){
+        if(line[0] != ';') {
+
+        }
+    }
+
+
+}

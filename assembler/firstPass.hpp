@@ -15,9 +15,12 @@ using namespace std;
 class FirstPass {
 
 private:
+
+    const int JUMP_2_ADDRS = 2;
+
     int pc = 0, found_exit = false, b, a;
-    unsigned long atual, espaco, tamanho = 0;
-    string nome, linha, posic;
+    unsigned long current, espaco, tamanho = 0;
+    string name, line, posic;
     pair <int, int> memoria;
     ifstream *file;
 

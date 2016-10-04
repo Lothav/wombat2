@@ -21,6 +21,7 @@ class SecondPass {
 
 public:
     SecondPass(map<string, int> labels,  map<string, pair<int, int> > data, ifstream &file);
+    void doSecondPass();
 };
 
 

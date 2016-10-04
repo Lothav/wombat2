@@ -14,41 +14,42 @@ FirstPass::FirstPass(ifstream &entrada){
 }
 
 void FirstPass::doFirstPass(void){
-    while( getline( (*file), linha ) ){
-        if(linha[0] != ';'){
-            atual = linha.find_first_not_of(" 	 ");	//remove os espa?os e tabs
+    while( getline( (*file), line ) ){
+        if(line[0] != ';'){
+            
+            current = line.find_first_not_of(" 	 "); // jump spaces, get first character index
+            if( isalpha(line[current]) ){
 
-            if( isalpha(linha[atual]) ){
-
-                nome = linha.substr(atual, linha.size());
-                espaco = nome.find_first_of(" ");
-                nome = nome.substr(0, espaco);
+                name = line.substr(current, line.size());
+                espaco = name.find_first_of(" ");
+                name = name.substr(0, espaco);
                 if(found_exit){
-                    //achou um .data
-                    linha = linha.substr( (espaco+1), linha.size() );
-                    atual = linha.find_first_of("0123456789");
-                    a = atoi(linha.c_str());
+                    // .data step
+                    line = line.substr( (espaco+1), line.size() );
+                    current = line.find_first_of("0123456789");
+                    a = atoi(line.c_str());
 
-                    posic = linha.substr((atual+2), linha.size());
+                    posic = line.substr(( current + JUMP_2_ADDRS ), line.size());
                     posic = posic.substr(0, posic.find_first_of(" 	 "));
                     b = atoi(posic.c_str());
+                    
                     memoria = make_pair( a, b); // < bytes , numero >
-                    data[nome] = memoria; // < nome , memoria >
+                    data[name] = memoria; // < name , memoria >
                 }
                 if(!found_exit){
-                    //achou uma instrucao
+                    // instruction found
                     pc += 2;
-                    if(nome.compare("exit") == 0){
-                        //terminou a parte das instrucoes
+                    if(name.compare("exit") == 0){
+                        //  finish instruction step -> jump to .data step
                         found_exit = true;
                     }
                 }
             }
-            if(linha[atual] == '_'){	//leu uma lable
-                tamanho = linha.find(':');
-                nome = linha.substr(0, tamanho);
-                labels[nome] = pc; 	//mapeia o lable
-                pc += 2;
+            if(line[current] == '_'){	// label read
+                tamanho = line.find(':');
+                name = line.substr(0, tamanho);
+                labels[name] = pc; 	// label map
+                pc += JUMP_2_ADDRS;
             }
         }
     }
