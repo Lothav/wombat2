@@ -8,6 +8,7 @@
 #include <map>
 #include <fstream>
 #include <stdlib.h>
+#include "tables.h"
 
 #define ASSEMBLER_SECONDPASS_H
 
@@ -15,13 +16,13 @@ using namespace std;
 
 class SecondPass {
 
-    map<string, int> labels; //mapa dos lables
-    map<string, pair<int, int> > data; //mapa dos nomes da memoria
+    vector< DataTable > data;
+    vector< LabelTable > labels;
     ifstream *file;
     string line;
 
 public:
-    SecondPass(map<string, int> labels,  map<string, pair<int, int> > data, ifstream &file);
+    SecondPass(  vector< DataTable > data, vector< LabelTable >  labels,ifstream &file);
     void doSecondPass();
 };
 

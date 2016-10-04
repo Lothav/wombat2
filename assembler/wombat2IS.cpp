@@ -4,6 +4,6 @@
 
 #include "wombat2IS.h"
 
-int wombat2IS getInstructionCode(){
+int wombat2IS::getInstructionCode(){
 
 };

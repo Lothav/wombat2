@@ -8,6 +8,8 @@
 #include <map>
 #include <fstream>
 #include <stdlib.h>
+#include <vector>
+#include "tables.h"
 
 #define ASSEMBLER_FIRSTPASS_H
 using namespace std;
@@ -24,13 +26,16 @@ private:
     pair <int, int> memoria;
     ifstream *file;
 
-    map<string, int> labels; //mapa dos lables
-    map<string, pair<int, int> > data; //mapa dos nomes da memoria
+    LabelTable lab;
+    DataTable dat;
+
+    vector< LabelTable > labels; //mapa dos lables
+    vector< DataTable > data;   //mapa dos nomes da memoria
 
 public:
     FirstPass (ifstream &file);
     void doFirstPass(void);
-    map<string, pair<int, int> > getData();
-    map<string, int> getLabels();
+    vector< DataTable > getData();
+    vector< LabelTable  >  getLabels();
 };
 #endif //ASSEMBLER_FIRSTPASS_H

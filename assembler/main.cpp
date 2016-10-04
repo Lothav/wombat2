@@ -8,9 +8,8 @@ using namespace std;
 int main( int argc, char *argv[] ){
 
     ifstream file;
-    map<string, pair<int, int> > data;
-    map<string, int> labels;
-
+    vector< DataTable > data;
+    vector< LabelTable  >labels;
     file.open(argv[1]);
     if( !file.is_open() ){  return(ENOENT); } /* No such file or directory */
 
@@ -19,7 +18,7 @@ int main( int argc, char *argv[] ){
     labels = firstPass.getLabels(); /* Get label table */
     data = firstPass.getData(); /* Get .data table */
 
-    SecondPass secondPass(labels, data, file);
+    SecondPass secondPass(data, labels, file);
     secondPass.doSecondPass();
 
     file.close();

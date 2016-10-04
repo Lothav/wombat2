@@ -2,10 +2,12 @@
 // Created by luizorv on 04/10/16.
 //
 
+#include <vector>
 #include "secondPass.hpp"
+using namespace std;
 
-SecondPass::SecondPass(map<string, int> labels_map,
-                       map<string, pair<int, int> > data_map,
+SecondPass::SecondPass(vector< DataTable > data_map,
+                       vector< LabelTable  >  labels_map,
                        ifstream &entrada) {
     file = (&entrada);
     labels = labels_map;

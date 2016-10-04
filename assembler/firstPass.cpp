@@ -9,7 +9,7 @@
 
 using namespace std;
 
-FirstPass::FirstPass(ifstream &entrada){
+FirstPass::FirstPass( ifstream &entrada ){
     file = (&entrada);
 }
 
@@ -29,14 +29,20 @@ void FirstPass::doFirstPass(void){
                 if(found_exit){
                     line = line.substr( (espaco+1), line.size() );
                     current = line.find_first_of("0123456789");
-                    a = atoi(line.c_str());
+                    a = atoi( line.c_str() );
 
                     posic = line.substr(( current + JUMP_2_ADDRS ), line.size());
                     posic = posic.substr(0, posic.find_first_of(" 	 "));
-                    b = atoi(posic.c_str());
-                    
-                    memoria = make_pair( a, b); // < bytes , numero >
-                    data[name] = memoria; // < name , memoria >
+                    b = atoi( posic.c_str() );
+
+                    dat.label = name;
+                    dat.byte_size = a;
+                    dat.value = b;
+
+                    data.push_back(dat);
+
+                    //memoria = make_pair( a, b); // < bytes , numero >
+                    //[name] = memoria; // < name , memoria >
                 }
 
                 /* instruction count memory addrs
@@ -53,18 +59,20 @@ void FirstPass::doFirstPass(void){
             /* found label */
             if(line[current] == '_'){
                 tamanho = line.find(':');
-                name = line.substr(0, tamanho);
-                labels[name] = pc; 	// label map
+                lab.label = line.substr(0, tamanho);
+                lab.memPos = pc;
+                labels.push_back(lab);
+                //labels[name] = pc; 	// label map
                 pc += JUMP_2_ADDRS;
             }
         }
     }
 }
 
-map<string, pair<int, int> > FirstPass::getData(){
+vector< DataTable > FirstPass::getData(){
     return data;
 };
 
-map<string, int> FirstPass::getLabels(){
+vector< LabelTable > FirstPass::getLabels(){
     return labels;
 };
