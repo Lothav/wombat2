@@ -18,6 +18,7 @@ class SecondPass {
     map<string, int> labels; //mapa dos lables
     map<string, pair<int, int> > data; //mapa dos nomes da memoria
     ifstream *file;
+    string line;
 
 public:
     SecondPass(map<string, int> labels,  map<string, pair<int, int> > data, ifstream &file);

@@ -23,8 +23,10 @@ void FirstPass::doFirstPass(void){
                 name = line.substr(current, line.size());
                 espaco = name.find_first_of(" ");
                 name = name.substr(0, espaco);
+
+                /* wait for exit call
+                 * .data step */
                 if(found_exit){
-                    // .data step
                     line = line.substr( (espaco+1), line.size() );
                     current = line.find_first_of("0123456789");
                     a = atoi(line.c_str());
@@ -36,16 +38,20 @@ void FirstPass::doFirstPass(void){
                     memoria = make_pair( a, b); // < bytes , numero >
                     data[name] = memoria; // < name , memoria >
                 }
+
+                /* instruction count memory addrs
+                 * watch exit call
+                 * */
                 if(!found_exit){
-                    // instruction found
-                    pc += 2;
+                    pc += JUMP_2_ADDRS;
                     if(name.compare("exit") == 0){
                         //  finish instruction step -> jump to .data step
                         found_exit = true;
                     }
                 }
             }
-            if(line[current] == '_'){	// label read
+            /* found label */
+            if(line[current] == '_'){
                 tamanho = line.find(':');
                 name = line.substr(0, tamanho);
                 labels[name] = pc; 	// label map

@@ -13,11 +13,11 @@ SecondPass::SecondPass(map<string, int> labels_map,
 }
 
 void SecondPass::doSecondPass(){
+    ofstream mif_out;
+    mif_out.open ("mif_out.mif");
     while( getline( (*file), line ) ){
         if(line[0] != ';') {
 
         }
     }
-
-
 }
