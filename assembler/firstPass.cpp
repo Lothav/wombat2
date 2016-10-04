@@ -14,6 +14,15 @@ FirstPass::FirstPass( ifstream &entrada ){
 }
 
 void FirstPass::doFirstPass(void){
+
+    const int JUMP_2_ADDRS = 2;
+
+    LabelTable lab;
+    DataTable dat;
+    int pc = 0, found_exit = false, value, byte_size;
+    unsigned long current, espaco, tamanho = 0;
+    string name, line, posic;
+
     while( getline( (*file), line ) ){
         if(line[0] != ';'){
             

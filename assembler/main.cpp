@@ -2,7 +2,6 @@
 #include <fstream>
 #include "firstPass.hpp"
 #include "secondPass.hpp"
-#include "wombat2IS.hpp"
 
 using namespace std;
 
@@ -16,9 +15,11 @@ int main( int argc, char *argv[] ){
 
     FirstPass firstPass(file);
     firstPass.doFirstPass();
+
     labels = firstPass.getLabels(); /* Get label table */
     data = firstPass.getData(); /* Get .data table */
 
+    /* back file pointer to begin */
     file.clear();
     file.seekg(0, ios::beg);
 
