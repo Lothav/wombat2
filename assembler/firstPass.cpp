@@ -25,15 +25,6 @@ void FirstPass::doFirstPass(void){
                 nome = linha.substr(atual, linha.size());
                 espaco = nome.find_first_of(" ");
                 nome = nome.substr(0, espaco);
-
-                if(flag == 0){
-                    //achou uma instrucao
-                    pc += 2;
-                    if(nome.compare("exit") == 0){
-                        //terminou a parte das instrucoes
-                        flag = 1;
-                    }
-                }
                 if(flag == 1){
                     //achou um .data
                     linha = linha.substr( (espaco+1), linha.size() );
@@ -46,13 +37,29 @@ void FirstPass::doFirstPass(void){
                     memoria = make_pair( a, b); // < bytes , numero >
                     data[nome] = memoria; // < nome , memoria >
                 }
+                if(flag == 0){
+                    //achou uma instrucao
+                    pc += 2;
+                    if(nome.compare("exit") == 0){
+                        //terminou a parte das instrucoes
+                        flag = 1;
+                    }
+                }
             }
             if(linha[atual] == '_'){	//leu uma lable
                 tamanho = linha.find(':');
                 nome = linha.substr(0, tamanho);
-                lables[nome] = pc; 	//mapeia o lable
+                labels[nome] = pc; 	//mapeia o lable
                 pc += 2;
             }
         }
     }
 }
+
+map<string, pair<int, int> > FirstPass::getData(){
+    return data;
+};
+
+map<string, int> FirstPass::getLabels(){
+    return labels;
+};
