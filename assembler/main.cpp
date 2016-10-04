@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "firstPass.h"
+#include "firstPass.hpp"
 
 using namespace std;
 
@@ -15,8 +15,8 @@ int main( int argc, char *argv[] ){
 
     FirstPass firstPass(file);
     firstPass.doFirstPass();
-    data = firstPass.getData();
-    labels = firstPass.getLabels();
+    data = firstPass.getData(); /* Get .data table */
+    labels = firstPass.getLabels(); /* Get label table */
 
     file.close();
 

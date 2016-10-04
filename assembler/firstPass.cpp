@@ -5,11 +5,9 @@
 #include <map>
 #include <fstream>
 #include <stdlib.h>
-#include "firstPass.h"
-#include <iostream>
+#include "firstPass.hpp"
 
 using namespace std;
-
 
 FirstPass::FirstPass(ifstream &entrada){
     file = (&entrada);
