@@ -33,7 +33,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
     if(current > line.size()) return;
 
         /*  is register  */
-    if( line[current] == "R"[0] ){
+    if( line[current] == 'R' ){
         register_binary = bitset<3>( line[current+1] ).to_string(); //to binary
         mif_out << register_binary;
 
@@ -43,7 +43,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         this->insertOnFile(line, current);
     }
         /*  is label  */
-    else if( line[current] == "_"[0] ){
+    else if( line[current] == '_' ){
         line = line.substr(current, line.size());
         current = line.find_first_of("\t; ");
         if(current > line.size()) return;
@@ -63,7 +63,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         /*  is .data  */
     else if( isalpha(line[current]) ){
 
-        if(line[current] == "I"[0] && line[current+1] == "O"[0]){
+        if(line[current] == 'I' && line[current+1] == 'O'){
             mif_out << "11111110";
         } else {
             line = line.substr(current, line.size());
@@ -105,7 +105,16 @@ void SecondPass::doSecondPass(){
     while( getline( (*file), line ) ){
         if(line[0] != ';') {
             current = line.find_first_not_of("\t ");
+
+            if( line[current] == '_'){
+                current = line.find_first_of("\t ");
+                line = line.substr(current, line.size());
+                current = line.find_first_not_of("\t ");
+                line = line.substr(current, line.size());
+            }
+
             if( isalpha(line[current]) ){
+                current = line.find_first_not_of("\t ");
                 line = line.substr(current, line.size());
                 current = line.find_first_of("\t: ");
                 name = line.substr(0, current);
