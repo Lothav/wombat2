@@ -21,7 +21,7 @@ private:
     ofstream mif_out;
     vector< DataTable > data;
     vector< LabelTable > labels;
-
+    int count_bits;
 public:
     SecondPass(  vector< DataTable > data, vector< LabelTable > labels, ifstream &file, string name_out);
     void doSecondPass();
