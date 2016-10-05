@@ -11,21 +11,26 @@ using namespace std;
 
 SecondPass::SecondPass(vector< DataTable > data_map,
                        vector< LabelTable > labels_map,
-                       ifstream &entrada) {
+                       ifstream &entrada,
+                       string name_out) {
     file = (&entrada);
     labels = labels_map;
     data = data_map;
+
+    /* get name from file input (without extension) to set output .mif and open it */
+    mif_out.open (name_out.substr(0, name_out.find_first_of(".")) + ".mif");
 }
 
 
 void SecondPass::insertOnFile(string line, unsigned long current){
 
     string register_binary, label;
-    unsigned long long int register_decimal;
-
+    int i;
     current = line.find_first_not_of("\t ");
+    if(current > line.size()) return;
     line = line.substr(current, line.size());
     current = line.find_first_not_of("\t ");
+    if(current > line.size()) return;
 
         /*  is register  */
     if( line[current] == "R"[0] ){
@@ -33,6 +38,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         mif_out << register_binary;
 
         current = line.find_first_of("\t ");
+        if(current > line.size()) return;
         line = line.substr(current, line.size());
         this->insertOnFile(line, current);
     }
@@ -40,10 +46,9 @@ void SecondPass::insertOnFile(string line, unsigned long current){
     else if( line[current] == "_"[0] ){
         line = line.substr(current, line.size());
         current = line.find_first_of("\t; ");
-
+        if(current > line.size()) return;
         label = line.substr(0, current);
-
-        for(int i = 0; i < labels.size(); i++){
+        for(i = 0; i < labels.size(); i++){
             if(labels[i].label == label){
                 register_binary = bitset<8>( labels[i].memPos ).to_string(); //to binary
                 mif_out << register_binary;
@@ -51,24 +56,44 @@ void SecondPass::insertOnFile(string line, unsigned long current){
             }
         }
         current = line.find_first_of("\t; ");
+        if(current > line.size()) return;
         line = line.substr(current, line.size());
         this->insertOnFile(line, current);
     }
         /*  is .data  */
     else if( isalpha(line[current]) ){
 
-        //this->insertOnFile(line, current);
+        if(line[current] == "I"[0] && line[current+1] == "O"[0]){
+            mif_out << "11111110";
+        } else {
+            line = line.substr(current, line.size());
+            current = line.find_first_of("\t; ");
+            if(current > line.size()) return;
+            label = line.substr(0, current);
+
+            for( i = 0; i < data.size(); i++ ){
+                if(data[i].label == label){
+                    register_binary = bitset< 8 >( data[i].memPos ).to_string(); //to binary
+                    mif_out << register_binary;
+                    break;
+                }
+
+            }
+        }
+        current = line.find_first_of("\t; ");
+        if(current > line.size()) return;
+        line = line.substr(current, line.size());
+        this->insertOnFile(line, current);
+
     }
 }
 
-void SecondPass::doSecondPass(string name_out){
-    ofstream mif_out;
+void SecondPass::doSecondPass(){
+
     string op_code_binary, line, name;
     size_t opcode;
     unsigned long current, gap;
 
-    /* get name from file input (without extension) to set output .mif and open it */
-    mif_out.open (name_out.substr(0, name_out.find_first_of(".")) + ".mif");
 
     mif_out << "DEPTH = 256\n";
     mif_out << "WIDTH = 16\n";
@@ -87,10 +112,10 @@ void SecondPass::doSecondPass(string name_out){
 
                 /*   Write Opcode  (5 bits)  */
                 opcode = Wombat2IS::getInstructionCode(name);
-                op_code_binary = bitset<8>( opcode ).to_string(); //to binary
+                op_code_binary = bitset<5>( opcode ).to_string(); //to binary
                 mif_out << op_code_binary;
                 if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
-                    mif_out << '000';
+                    mif_out << "000";
                 }
 
                 line = line.substr(current, line.size());

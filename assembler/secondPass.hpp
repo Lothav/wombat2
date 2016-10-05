@@ -23,8 +23,8 @@ private:
     vector< LabelTable > labels;
 
 public:
-    SecondPass(  vector< DataTable > data, vector< LabelTable > labels, ifstream &file);
-    void doSecondPass(string name_out);
+    SecondPass(  vector< DataTable > data, vector< LabelTable > labels, ifstream &file, string name_out);
+    void doSecondPass();
     void insertOnFile(string line, unsigned long current);
 };
 

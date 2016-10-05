@@ -23,10 +23,9 @@ int main( int argc, char *argv[] ){
     file.clear();
     file.seekg(0, ios::beg);
 
-    SecondPass secondPass(data, labels, file);
-    secondPass.doSecondPass(argv[1]);
+    SecondPass secondPass(data, labels, file, argv[1]);
+    secondPass.doSecondPass();
 
     file.close();
-
     return 0;
 }
