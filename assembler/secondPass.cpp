@@ -32,7 +32,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
     current = line.find_first_not_of("\t ");
     if(current > line.size()) return;
 
-        /*  is register  */
+    /*  is register  */
     if( line[current] == 'R' ){
         register_binary = bitset<3>( line[current+1] ).to_string(); //to binary
         mif_out << register_binary;
@@ -84,7 +84,6 @@ void SecondPass::insertOnFile(string line, unsigned long current){
                     count_bits += 8;
                     break;
                 }
-
             }
         }
         current = line.find_first_of("\t; ");
@@ -97,11 +96,11 @@ void SecondPass::insertOnFile(string line, unsigned long current){
 
 void SecondPass::doSecondPass(){
 
-    string op_code_binary, line, name;
+    string op_code_binary, line, name, data_verify;
     size_t opcode;
-    unsigned long current, gap;
-
-
+    unsigned long current, gap, data_verify_c;
+    int i;
+    const int data_size[10] = {1,2,3,4,5,6,7,8,9,10};
     mif_out << "DEPTH = 256\n";
     mif_out << "WIDTH = 16\n";
     mif_out << "ADDRESS_RADIX = HEX\n";
@@ -127,24 +126,36 @@ void SecondPass::doSecondPass(){
                 current = line.find_first_of("\t: ");
                 name = line.substr(0, current);
 
-                /*   Write Opcode  (5 bits)  */
-                opcode = Wombat2IS::getInstructionCode(name);
-                op_code_binary = bitset<5>( opcode ).to_string(); //to binary
-                mif_out << op_code_binary;
-                count_bits += 5;
-                if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
-                    mif_out << "000";
-                    count_bits += 3;
+                data_verify_c = line.find_first_of(".");
+
+                //@TODO solve this if
+                if(data_verify_c < 10){
+                    for( i = 0; i < data.size(); i++ ){
+                        if(data[i].label == name){
+                            //@TODO bitset variable
+                            mif_out << bitset<  2*8 >( data[i].value ).to_string(); //to binary
+                            break;
+                        }
+                    }
+                }else{
+                    /*   Write Opcode  (5 bits)  */
+                    opcode = Wombat2IS::getInstructionCode(name);
+                    op_code_binary = bitset<5>( opcode ).to_string(); //to binary
+                    mif_out << op_code_binary;
+                    count_bits += 5;
+                    if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
+                        mif_out << "000";
+                        count_bits += 3;
+                    }
+
+                    line = line.substr(current, line.size());
+                    insertOnFile(line, current);
+
+                    while (  count_bits < 16 ){
+                        mif_out << '0';
+                        count_bits++;
+                    }
                 }
-
-                line = line.substr(current, line.size());
-                insertOnFile(line, current);
-
-                while (  count_bits <16){
-                    mif_out << '0';
-                    count_bits++;
-                }
-
                 mif_out << "\n";
             }
         }
