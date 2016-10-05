@@ -20,18 +20,32 @@ SecondPass::SecondPass(vector< DataTable > data_map,
 }
 
 
-void insertOnFile(string line, unsigned long current, ofstream mif_out){
+void SecondPass::insertOnFile(string line, unsigned long current, ofstream mif_out){
 
     string register_binary;
 
     line = line.substr(current, line.size());
     current = line.find_first_not_of("\t ");
 
+        /*  is register  */
     if( line[current] == "R"[0] ){
         line = line.substr(current, line.size());
         current = line.find_first_not_of("\t ");
         register_binary = bitset<8>( atoi(line[current]) ).to_string(); //to binary
+        mif_out << register_binary;
+        insertOnFile(line, current, mif_out);
     }
+        /*  is label  */
+    else if( line[current] == "_"[0] ){
+
+        insertOnFile(line, current, mif_out);
+    }
+        /*  is .data  */
+    else {
+
+        insertOnFile(line, current, mif_out);
+    }
+
 }
 
 void SecondPass::doSecondPass(string name_out){

@@ -24,6 +24,7 @@ class SecondPass {
 public:
     SecondPass(  vector< DataTable > data, vector< LabelTable >  labels,ifstream &file);
     void doSecondPass(string name_out);
+    void insertOnFile(string line, unsigned long current, ofstream mif_out);
 };
 
 #endif //ASSEMBLER_SECONDPASS_H
