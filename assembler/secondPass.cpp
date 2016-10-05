@@ -71,8 +71,11 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         } else {
             line = line.substr(current, line.size());
             current = line.find_first_of("\t; ");
-            if(current > line.size()) return;
-            label = line.substr(0, current);
+            if(current < line.size()) {
+                label = line.substr(0, current);
+            }else{
+                label = line;
+            }
 
             for( i = 0; i < data.size(); i++ ){
                 if(data[i].label == label){

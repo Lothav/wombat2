@@ -16,4 +16,3 @@ size_t Wombat2IS::getInstructionCode(string code){
     Wombat2IS womb;
     return findIndex(womb.codes, 26, code);
 };
-
