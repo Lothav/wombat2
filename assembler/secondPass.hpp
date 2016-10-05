@@ -16,15 +16,16 @@ using namespace std;
 
 class SecondPass {
 
+private:
     ifstream *file;
-
+    ofstream mif_out;
     vector< DataTable > data;
     vector< LabelTable > labels;
 
 public:
-    SecondPass(  vector< DataTable > data, vector< LabelTable >  labels,ifstream &file);
+    SecondPass(  vector< DataTable > data, vector< LabelTable > labels, ifstream &file);
     void doSecondPass(string name_out);
-    void insertOnFile(string line, unsigned long current, ofstream mif_out);
+    void insertOnFile(string line, unsigned long current);
 };
 
 #endif //ASSEMBLER_SECONDPASS_H

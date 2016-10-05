@@ -4,8 +4,6 @@
 
 #include <vector>
 #include <bitset>
-#include <cstring>
-#include <stdlib.h>
 #include "secondPass.hpp"
 #include "wombat2IS.hpp"
 
@@ -20,32 +18,47 @@ SecondPass::SecondPass(vector< DataTable > data_map,
 }
 
 
-void SecondPass::insertOnFile(string line, unsigned long current, ofstream mif_out){
+void SecondPass::insertOnFile(string line, unsigned long current){
 
-    string register_binary;
+    string register_binary, label;
+    unsigned long long int register_decimal;
 
+    current = line.find_first_not_of("\t ");
     line = line.substr(current, line.size());
     current = line.find_first_not_of("\t ");
 
         /*  is register  */
     if( line[current] == "R"[0] ){
-        line = line.substr(current, line.size());
-        current = line.find_first_not_of("\t ");
-        register_binary = bitset<8>( atoi(line[current]) ).to_string(); //to binary
+        register_binary = bitset<3>( line[current+1] ).to_string(); //to binary
         mif_out << register_binary;
-        insertOnFile(line, current, mif_out);
+
+        current = line.find_first_of("\t ");
+        line = line.substr(current, line.size());
+        this->insertOnFile(line, current);
     }
         /*  is label  */
     else if( line[current] == "_"[0] ){
+        line = line.substr(current, line.size());
+        current = line.find_first_of("\t; ");
 
-        insertOnFile(line, current, mif_out);
+        label = line.substr(0, current);
+
+        for(int i = 0; i < labels.size(); i++){
+            if(labels[i].label == label){
+                register_binary = bitset<8>( labels[i].memPos ).to_string(); //to binary
+                mif_out << register_binary;
+                break;
+            }
+        }
+        current = line.find_first_of("\t; ");
+        line = line.substr(current, line.size());
+        this->insertOnFile(line, current);
     }
         /*  is .data  */
-    else {
+    else if( isalpha(line[current]) ){
 
-        insertOnFile(line, current, mif_out);
+        //this->insertOnFile(line, current);
     }
-
 }
 
 void SecondPass::doSecondPass(string name_out){
@@ -70,18 +83,23 @@ void SecondPass::doSecondPass(string name_out){
             if( isalpha(line[current]) ){
                 line = line.substr(current, line.size());
                 current = line.find_first_of("\t: ");
-                name = name.substr(0, current);
+                name = line.substr(0, current);
 
                 /*   Write Opcode  (5 bits)  */
                 opcode = Wombat2IS::getInstructionCode(name);
                 op_code_binary = bitset<8>( opcode ).to_string(); //to binary
                 mif_out << op_code_binary;
+                if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
+                    mif_out << '000';
+                }
 
-                insertOnFile(line, current,mif_out);
+                line = line.substr(current, line.size());
+                insertOnFile(line, current);
 
                 mif_out << "\n";
             }
         }
     }
     mif_out << "END;";
+    mif_out.close();
 }
