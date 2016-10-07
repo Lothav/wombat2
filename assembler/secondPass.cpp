@@ -98,10 +98,10 @@ void SecondPass::insertOnFile(string line, unsigned long current){
 
 void SecondPass::doSecondPass(){
 
-    string op_code_binary, line, name, data_verify;
+    string op_code_binary, line, name, data_value;
     size_t opcode;
     unsigned long current, gap, data_verify_c;
-    int i;
+    int i, j;
     const int data_size[10] = {1,2,3,4,5,6,7,8,9,10};
     mif_out << "DEPTH = 256\n";
     mif_out << "WIDTH = 16\n";
@@ -135,24 +135,21 @@ void SecondPass::doSecondPass(){
                     for( i = 0; i < data.size(); i++ ){
                         if(data[i].label == name){
                             //@TODO bitset variable
-                            int j;
-                            string value;
-                            value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
+                            data_value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
                             for(j = 0; j < 2*8; j++){
-                                if( !(j % 8) && j ){
-                                    mif_out << "\n";
-                                }
-                                mif_out << value[j];
+                                if( !(j % 8) && j ){ mif_out << "\n"; }
+                                mif_out << data_value[j];
                             }
                             break;
                         }
                     }
                 } else {
-                    /*   Write Opcode  (5 bits)  */
+                    /*   write opcode  (5 bits)  */
                     opcode = Wombat2IS::getInstructionCode(name);
                     op_code_binary = bitset<5>( opcode ).to_string(); //to binary
                     mif_out << op_code_binary;
                     count_bits += 5;
+
                     if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
                         mif_out << "000";
                         count_bits += 3;
@@ -162,13 +159,11 @@ void SecondPass::doSecondPass(){
                     line = line.substr(current, line.size());
                     insertOnFile(line, current);
 
+                    /*   complete with zeros instruction that not fill 16 bits   */
                     while (  count_bits < 16 ){
                         mif_out << '0';
                         count_bits++;
-
-                        if(count_bits == 8) {
-                            mif_out << "\n";
-                        }
+                        if(count_bits == 8) { mif_out << "\n"; }
                     }
                 }
                 mif_out << "\n";
