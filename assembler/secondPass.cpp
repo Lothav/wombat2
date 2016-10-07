@@ -98,10 +98,9 @@ void SecondPass::insertOnFile(string line, unsigned long current){
 
 void SecondPass::doSecondPass(){
 
-    string op_code_binary, line, name, data_value;
+    string op_code_binary, line, name;
     size_t opcode;
-    unsigned long current, gap, data_verify_c;
-    int i, j;
+    unsigned long current;
 
     mif_out << "DEPTH = 256\n";
     mif_out << "WIDTH = 16\n";
@@ -115,14 +114,8 @@ void SecondPass::doSecondPass(){
         if(line[0] != ';') {
             current = line.find_first_not_of("\t ");
 
-            if( line[current] == '_'){
-                /* jump with cursor along the line
-                 * we just ignore labels here   */
-                current = line.find_first_of("\t ");
-                line = line.substr(current, line.size());
-                current = line.find_first_not_of("\t ");
-                line = line.substr(current, line.size());
-            }
+            /*  here, we just ignore labels instructions */
+            jumpLabelIns(current, &line);
 
             if( isalpha(line[current]) ){
                 /*  got a instruction  */
@@ -131,45 +124,26 @@ void SecondPass::doSecondPass(){
                 current = line.find_first_of("\t: ");
                 name = line.substr(0, current);
 
-                if( line.find(".data") == string::npos){
+                if( line.find(".data") != string::npos ){
                     /*  line has substring .data  */
-                    for( i = 0; i < data.size(); i++ ){
-                        if(data[i].label == name){
-                            //@TODO bitset variable
-                            data_value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
-                            for(j = 0; j < 2*8; j++){
-                                if( !(j % 8) && j ){ mif_out << "\n"; }
-                                mif_out << data_value[j];
-                            }
-                            break;
-                        }
-                    }
+                    dotDataIns( name );
                 } else {
                     /*   write opcode  (5 bits)  */
-                    opcode = Wombat2IS::getInstructionCode(name);
+                    opcode = Wombat2IS::getInstructionCode( name );
                     op_code_binary = bitset<5>( opcode ).to_string(); //to binary
                     mif_out << op_code_binary;
                     count_bits += 5;
 
                     /*  instructions that has first reg (3bits) equals zero  */
-                    if(opcode == Wombat2IS::JUMP || opcode == Wombat2IS::MOVESP ||
-                            opcode == Wombat2IS::CALL || opcode == Wombat2IS::STORERA || opcode == Wombat2IS::ADDI){
-                        mif_out << "000";
-                        count_bits += 3;
-                        mif_out << "\n";
-                    }
+                    insertZerosFirstRegIns( opcode );
                     /*  at this point, we have first line instruction (8bits)  */
 
                     /*  lets get/insert the second one:  */
-                    line = line.substr(current, line.size());
-                    insertOnFile(line, current);
+                    line = line.substr( current, line.size() );
+                    insertOnFile( line, current );
 
                     /*   complete with zeros instruction that not fill 16 bits   */
-                    while (  count_bits < 16 ){
-                        mif_out << '0';
-                        count_bits++;
-                        if(count_bits == 8) { mif_out << "\n"; }
-                    }
+                    completeWithZeros();
                 }
                 mif_out << "\n";
             }
@@ -177,4 +151,46 @@ void SecondPass::doSecondPass(){
     }
     mif_out << "END;";
     mif_out.close();
+}
+
+void SecondPass::completeWithZeros(){
+    while (  count_bits < 16 ){
+        mif_out << '0';
+        count_bits++;
+        if(count_bits == 8) { mif_out << "\n"; }
+    }
+}
+
+void SecondPass::insertZerosFirstRegIns(size_t opcode){
+    if(opcode == Wombat2IS::JUMP || opcode == Wombat2IS::MOVESP ||
+       opcode == Wombat2IS::CALL || opcode == Wombat2IS::STORERA || opcode == Wombat2IS::ADDI){
+        mif_out << "000";
+        count_bits += 3;
+        mif_out << "\n";
+    }
+}
+
+void SecondPass::dotDataIns(string name){
+    int i, j;
+    string data_value;
+    for( i = 0; i < data.size(); i++ ){
+        if(data[i].label == name){
+            //@TODO bitset variable
+            data_value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
+            for(j = 0; j < 2*8; j++){
+                if( !(j % 8) && j ){ mif_out << "\n"; }
+                mif_out << data_value[j];
+            }
+            break;
+        }
+    }
+}
+
+void SecondPass::jumpLabelIns( unsigned long current, string* line ) {
+    if( (*line)[current] == '_'){
+        current = (*line).find_first_of("\t ");
+        (*line) = (*line).substr(current, (*line).size());
+        current = (*line).find_first_not_of("\t ");
+        (*line) = (*line).substr(current, (*line).size());
+    }
 }
