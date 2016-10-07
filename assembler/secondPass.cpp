@@ -131,10 +131,8 @@ void SecondPass::doSecondPass(){
                 current = line.find_first_of("\t: ");
                 name = line.substr(0, current);
 
-                data_verify_c = line.find_first_of(".");
-
-                //@TODO solve this if
-                if(data_verify_c < 10){
+                if( line.find(".data") == string::npos){
+                    /*  line has substring .data  */
                     for( i = 0; i < data.size(); i++ ){
                         if(data[i].label == name){
                             //@TODO bitset variable
