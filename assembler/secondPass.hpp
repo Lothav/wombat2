@@ -26,7 +26,7 @@ private:
     void insertZerosFirstRegIns(size_t opcode);
     void dotDataIns(string name);
     void jumpLabelIns( unsigned long current, string* line );
-    void insertOnFile(string line, unsigned long current);
+    void insertSecondLineBitsOnFile(string line, unsigned long current);
 public:
     SecondPass(  vector< DataTable > data, vector< LabelTable > labels, ifstream &file, string name_out);
     void doSecondPass();

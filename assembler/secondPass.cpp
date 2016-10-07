@@ -22,7 +22,7 @@ SecondPass::SecondPass(vector< DataTable > data_map,
 }
 
 
-void SecondPass::insertOnFile(string line, unsigned long current){
+void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
 
     string register_binary, label;
     int i;
@@ -34,7 +34,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
 
     /*  is register  */
     if( line[current] == 'R' ){
-        register_binary = bitset<3>( line[current+1] ).to_string(); //to binary
+        register_binary = bitset<3>( (unsigned long long int)line[current+1] ).to_string(); //to binary
         mif_out << register_binary;
         count_bits += 3;
         if(count_bits == 8) {
@@ -43,7 +43,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         current = line.find_first_of("\t ");
         if(current > line.size()) return;
         line = line.substr(current, line.size());
-        this->insertOnFile(line, current);
+        this->insertSecondLineBitsOnFile(line, current);
     }
         /*  is label  */
     else if( line[current] == '_' ){
@@ -62,7 +62,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         current = line.find_first_of("\t; ");
         if(current > line.size()) return;
         line = line.substr(current, line.size());
-        this->insertOnFile(line, current);
+        this->insertSecondLineBitsOnFile(line, current);
     }
         /*  is .data  */
     else if( isalpha(line[current]) ){
@@ -91,7 +91,7 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         current = line.find_first_of("\t; ");
         if(current > line.size()) return;
         line = line.substr(current, line.size());
-        this->insertOnFile(line, current);
+        this->insertSecondLineBitsOnFile(line, current);
 
     }
 }
@@ -140,7 +140,7 @@ void SecondPass::doSecondPass(){
 
                     /*  lets get/insert the second one:  */
                     line = line.substr( current, line.size() );
-                    insertOnFile( line, current );
+                    insertSecondLineBitsOnFile( line, current );
 
                     /*   complete with zeros instruction that not fill 16 bits   */
                     completeWithZeros();
