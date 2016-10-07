@@ -9,7 +9,7 @@ using namespace std;
 size_t findIndex(  string codes[], size_t size, string value ) {
     size_t index = 0;
     while ( index < size && codes[index].compare(value) != 0 ) ++index;
-    return ( index == size ? -1 : index );
+    return ( index == size ? (size_t)-1 : index );
 }
 
 size_t Wombat2IS::getInstructionCode(string code){

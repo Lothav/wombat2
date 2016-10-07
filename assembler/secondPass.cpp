@@ -53,7 +53,7 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
         label = line.substr(0, current);
         for(i = 0; i < labels.size(); i++){
             if(labels[i].label == label){
-                register_binary = bitset<8>( labels[i].memPos ).to_string(); //to binary
+                register_binary = bitset<8>( (unsigned long long int)labels[i].memPos ).to_string(); //to binary
                 mif_out << register_binary;
                 count_bits += 8;
                 break;
