@@ -13,7 +13,7 @@ using namespace std;
 class Wombat2IS {
 public:
     static size_t getInstructionCode(string code);
-    static const
+    static const int
             EXIT = 0,
             LOADI = 1,
             STOREI = 2,

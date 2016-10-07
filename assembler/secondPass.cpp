@@ -102,7 +102,7 @@ void SecondPass::doSecondPass(){
     size_t opcode;
     unsigned long current, gap, data_verify_c;
     int i, j;
-    const int data_size[10] = {1,2,3,4,5,6,7,8,9,10};
+
     mif_out << "DEPTH = 256\n";
     mif_out << "WIDTH = 16\n";
     mif_out << "ADDRESS_RADIX = HEX\n";
@@ -116,6 +116,8 @@ void SecondPass::doSecondPass(){
             current = line.find_first_not_of("\t ");
 
             if( line[current] == '_'){
+                /* jump with cursor along the line
+                 * we just ignore labels here   */
                 current = line.find_first_of("\t ");
                 line = line.substr(current, line.size());
                 current = line.find_first_not_of("\t ");
@@ -123,6 +125,7 @@ void SecondPass::doSecondPass(){
             }
 
             if( isalpha(line[current]) ){
+                /*  got a instruction  */
                 current = line.find_first_not_of("\t ");
                 line = line.substr(current, line.size());
                 current = line.find_first_of("\t: ");
@@ -150,12 +153,16 @@ void SecondPass::doSecondPass(){
                     mif_out << op_code_binary;
                     count_bits += 5;
 
-                    if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
+                    /*  instructions that has first reg (3bits) equals zero  */
+                    if(opcode == Wombat2IS::JUMP || opcode == Wombat2IS::MOVESP ||
+                            opcode == Wombat2IS::CALL || opcode == Wombat2IS::STORERA || opcode == Wombat2IS::ADDI){
                         mif_out << "000";
                         count_bits += 3;
                         mif_out << "\n";
                     }
+                    /*  at this point, we have first line instruction (8bits)  */
 
+                    /*  lets get/insert the second one:  */
                     line = line.substr(current, line.size());
                     insertOnFile(line, current);
 
