@@ -37,7 +37,9 @@ void SecondPass::insertOnFile(string line, unsigned long current){
         register_binary = bitset<3>( line[current+1] ).to_string(); //to binary
         mif_out << register_binary;
         count_bits += 3;
-
+        if(count_bits == 8) {
+            mif_out << "\n";
+        }
         current = line.find_first_of("\t ");
         if(current > line.size()) return;
         line = line.substr(current, line.size());
@@ -133,11 +135,19 @@ void SecondPass::doSecondPass(){
                     for( i = 0; i < data.size(); i++ ){
                         if(data[i].label == name){
                             //@TODO bitset variable
-                            mif_out << bitset<  2*8 >( data[i].value ).to_string(); //to binary
+                            int j;
+                            string value;
+                            value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
+                            for(j = 0; j < 2*8; j++){
+                                if( !(j % 8) && j ){
+                                    mif_out << "\n";
+                                }
+                                mif_out << value[j];
+                            }
                             break;
                         }
                     }
-                }else{
+                } else {
                     /*   Write Opcode  (5 bits)  */
                     opcode = Wombat2IS::getInstructionCode(name);
                     op_code_binary = bitset<5>( opcode ).to_string(); //to binary
@@ -146,6 +156,7 @@ void SecondPass::doSecondPass(){
                     if(opcode == 7 || opcode == 15 ||opcode == 17 || opcode == 22|| opcode == 21){
                         mif_out << "000";
                         count_bits += 3;
+                        mif_out << "\n";
                     }
 
                     line = line.substr(current, line.size());
@@ -154,6 +165,10 @@ void SecondPass::doSecondPass(){
                     while (  count_bits < 16 ){
                         mif_out << '0';
                         count_bits++;
+
+                        if(count_bits == 8) {
+                            mif_out << "\n";
+                        }
                     }
                 }
                 mif_out << "\n";

@@ -14,11 +14,12 @@ class Wombat2IS {
 public:
     static size_t getInstructionCode(string code);
 private:
-    string codes[26] = {"exit", "loadi", "storei", "add", "subtract",
-                       "multiply", "divide", "jump", "jmpz", "jmpn", "move",
-                       "load", "store", "loadc", "clear", "moveSp", "slt",
-                       "call", "loadSp", "storeSp", "ret", "loadRa", "storeRa"
-                               "addi", "sgt", "seq", "jmpp"};
+    string codes[27] =
+            {"exit", "loadi", "storei", "add", "subtract",
+             "multiply", "divide", "jump", "jmpz", "jmpn", "move",
+             "load", "store", "loadc", "clear", "moveSp", "slt",
+             "call", "loadSp", "storeSp", "ret", "loadRa", "storeRa",
+             "addi", "sgt", "seq", "jmpp"};
 };
 
 
