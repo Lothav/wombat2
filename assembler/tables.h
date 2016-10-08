@@ -18,7 +18,7 @@ public:
     string label;
     int byte_size;
     int memPos;
-    unsigned long long int value;
+    long long int value;
 };
 
 #endif //ASSEMBLER_TABLES_H

@@ -171,15 +171,19 @@ void SecondPass::insertZerosFirstRegIns(size_t opcode){
 }
 
 void SecondPass::dotDataIns(string name){
-    int i, j;
-    string data_value;
+    int i, c;
+    long long k;
+
     for( i = 0; i < data.size(); i++ ){
         if(data[i].label == name){
-            //@TODO bitset variable
-            data_value = bitset<  2*8 >( data[i].value ).to_string(); //to binary
-            for(j = 0; j < 2*8; j++){
-                if( !(j % 8) && j ){ mif_out << "\n"; }
-                mif_out << data_value[j];
+            /*  here, i cant use bitset<> to convert to binary, cause is a 'constexp'
+             *  and dont allow a variable (byte_size*8) as size.  */
+            for (c = (data[i].byte_size*8)-1; c >= 0; c--) {
+                k = data[i].value >> c;
+                if (k & 1) mif_out << "1";
+                else mif_out << "0";
+
+                if(c % 8 == 0 && c) { mif_out << "\n"; }
             }
             break;
         }
