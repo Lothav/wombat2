@@ -97,29 +97,20 @@ void SecondPass::writeOnFinalFile(){
     file_out << "BEGIN\n\n";
 
     for( i = 0; i < 256; i++ ){
+
+        stringstream stream;
+        string index;
+
+        stream << std::setfill ('0') << std::setw(2) << std::hex << i;
+        index = stream.str();
+
+        transform(index.begin(), index.end(), index.begin(), ::toupper);
         if(!file_temp.eof()){
-            file_temp.getline(line, sizeof(int));
-
+            file_temp.getline(line, sizeof(file_temp));
             if( strlen(line) ){
-                stringstream stream;
-                string index;
-
-                stream << std::setfill ('0') << std::setw(2) << std::hex << i;
-                index = stream.str();
-
-                transform(index.begin(), index.end(), index.begin(), ::toupper);
-
                 file_out << index + "\t\t:\t" + line + "\n";
             }
         } else {
-            stringstream stream;
-            string index;
-
-            stream << std::setfill ('0') << std::setw(2) << std::hex << i;
-            index = stream.str();
-
-            transform(index.begin(), index.end(), index.begin(), ::toupper);
-
             file_out << '[' + stream.str() + "..FF]" + ":\t" + "00000000\n";
             file_out << "END;";
             break;
