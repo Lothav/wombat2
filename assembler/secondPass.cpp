@@ -4,6 +4,11 @@
 
 #include <vector>
 #include <bitset>
+#include <limits>
+#include <sstream>
+#include <iomanip>
+#include <cstring>
+#include <algorithm>
 #include "secondPass.hpp"
 #include "wombat2IS.hpp"
 
@@ -16,9 +21,10 @@ SecondPass::SecondPass(vector< DataTable > data_map,
     file = (&entrada);
     labels = labels_map;
     data = data_map;
+    file_name_out = name_out.substr(0, name_out.find_first_of(".")) + ".mif";
 
     /* get name from file input (without extension) to set output .mif and open it */
-    mif_out.open (name_out.substr(0, name_out.find_first_of(".")) + ".mif");
+    mif_out.open (file_name_out + ".temp");
 }
 
 
@@ -102,13 +108,6 @@ void SecondPass::doSecondPass(){
     size_t opcode;
     unsigned long current;
 
-    mif_out << "DEPTH = 256\n";
-    mif_out << "WIDTH = 16\n";
-    mif_out << "ADDRESS_RADIX = HEX\n";
-    mif_out << "DATA_RADIX = BIN\n";
-    mif_out << "CONTENT\n";
-    mif_out << "BEGIN\n\n";
-
     while( getline( (*file), line ) ){
         count_bits = 0;
         if(line[0] != ';') {
@@ -149,8 +148,11 @@ void SecondPass::doSecondPass(){
             }
         }
     }
-    mif_out << "END;";
     mif_out.close();
+
+    /*  now, we read the file out and just
+     * put the HEX index on instructions  */
+    putIndexOnIns();
 }
 
 void SecondPass::completeWithZeros(){
@@ -197,4 +199,52 @@ void SecondPass::jumpLabelIns( unsigned long current, string* line ) {
         current = (*line).find_first_not_of("\t ");
         (*line) = (*line).substr(current, (*line).size());
     }
+}
+
+void SecondPass::putIndexOnIns(){
+
+
+    ifstream file_temp(file_name_out + ".temp");
+    ofstream file_out(file_name_out);
+    int i ;
+    char *line, *line_next ;
+
+    file_out << "DEPTH = 256\n";
+    file_out << "WIDTH = 16\n";
+    file_out << "ADDRESS_RADIX = HEX\n";
+    file_out << "DATA_RADIX = BIN\n";
+    file_out << "CONTENT\n";
+    file_out << "BEGIN\n\n";
+
+    for( i = 0; i < 256; i++ ){
+        if(!file_temp.eof()){
+            file_temp.getline(line,30);
+
+            if( strlen(line) ){
+                stringstream stream;
+                string index;
+
+                stream << std::setfill ('0') << std::setw(2) << std::hex << i;
+                index = stream.str();
+
+                transform(index.begin(), index.end(), index.begin(), ::toupper);
+
+                file_out << index + "\t\t:\t" + line + "\n";
+            }
+        } else {
+            stringstream stream;
+            string index;
+
+            stream << std::setfill ('0') << std::setw(2) << std::hex << i;
+            index = stream.str();
+
+            transform(index.begin(), index.end(), index.begin(), ::toupper);
+
+            file_out << '[' + stream.str() + "..FF]" + ":\t" + "00000000\n";
+            file_out << "END;";
+            break;
+        }
+    }
+    /*  remove temp file    */
+    remove((file_name_out + ".temp").c_str());
 }

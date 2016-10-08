@@ -19,12 +19,14 @@ class SecondPass {
 private:
     ifstream *file;
     ofstream mif_out;
+    string file_name_out;
     vector< DataTable > data;
     vector< LabelTable > labels;
     int count_bits;
     void completeWithZeros();
     void insertZerosFirstRegIns(size_t opcode);
     void dotDataIns(string name);
+    void putIndexOnIns();
     void jumpLabelIns( unsigned long current, string* line );
     void insertSecondLineBitsOnFile(string line, unsigned long current);
 public:
