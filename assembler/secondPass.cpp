@@ -90,7 +90,7 @@ void SecondPass::writeOnFinalFile(){
     char *line, *line_next ;
 
     file_out << "DEPTH = 256\n";
-    file_out << "WIDTH = 16\n";
+    file_out << "WIDTH = 8\n";
     file_out << "ADDRESS_RADIX = HEX\n";
     file_out << "DATA_RADIX = BIN\n";
     file_out << "CONTENT\n";
