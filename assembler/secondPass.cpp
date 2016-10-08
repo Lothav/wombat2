@@ -28,6 +28,108 @@ SecondPass::SecondPass(vector< DataTable > data_map,
 }
 
 
+void SecondPass::doSecondPass(){
+
+    string op_code_binary, line, name;
+    size_t opcode;
+    unsigned long current;
+
+    while( getline( (*file), line ) ){
+        count_bits = 0;
+        if(line[0] != ';') {
+            current = line.find_first_not_of("\t ");
+
+            /*  here, we just ignore labels instructions */
+            jumpLabelIns(current, &line);
+
+            if( isalpha(line[current]) ){
+                /*  got a instruction  */
+                current = line.find_first_not_of("\t ");
+                line = line.substr(current, line.size());
+                current = line.find_first_of("\t: ");
+                name = line.substr(0, current);
+
+                if( line.find(".data") != string::npos ){
+                    /*  line has substring .data  */
+                    dotDataIns( name );
+                } else {
+                    /*   write opcode  (5 bits)  */
+                    opcode = Wombat2IS::getInstructionCode( name );
+                    op_code_binary = bitset<5>( opcode ).to_string(); //to binary
+                    mif_out << op_code_binary;
+                    count_bits += 5;
+
+                    /*  instructions that has first reg (3bits) equals zero  */
+                    insertZerosFirstRegIns( opcode );
+                    /*  at this point, we have first line instruction (8bits)  */
+
+                    /*  lets get/insert the second one:  */
+                    line = line.substr( current, line.size() );
+                    insertSecondLineBitsOnFile( line, current );
+
+                    /*   complete with zeros instruction that not fill 16 bits   */
+                    completeWithZeros();
+                }
+                mif_out << "\n";
+            }
+        }
+    }
+    mif_out.close();
+
+    /*  now, we read the file out temp and just
+     * put the HEX index on instructions in final file  */
+    writeOnFinalFile();
+}
+
+void SecondPass::writeOnFinalFile(){
+
+
+    ifstream file_temp(file_name_out + ".temp");
+    ofstream file_out(file_name_out);
+    int i ;
+    char *line, *line_next ;
+
+    file_out << "DEPTH = 256\n";
+    file_out << "WIDTH = 16\n";
+    file_out << "ADDRESS_RADIX = HEX\n";
+    file_out << "DATA_RADIX = BIN\n";
+    file_out << "CONTENT\n";
+    file_out << "BEGIN\n\n";
+
+    for( i = 0; i < 256; i++ ){
+        if(!file_temp.eof()){
+            file_temp.getline(line, sizeof(int));
+
+            if( strlen(line) ){
+                stringstream stream;
+                string index;
+
+                stream << std::setfill ('0') << std::setw(2) << std::hex << i;
+                index = stream.str();
+
+                transform(index.begin(), index.end(), index.begin(), ::toupper);
+
+                file_out << index + "\t\t:\t" + line + "\n";
+            }
+        } else {
+            stringstream stream;
+            string index;
+
+            stream << std::setfill ('0') << std::setw(2) << std::hex << i;
+            index = stream.str();
+
+            transform(index.begin(), index.end(), index.begin(), ::toupper);
+
+            file_out << '[' + stream.str() + "..FF]" + ":\t" + "00000000\n";
+            file_out << "END;";
+            break;
+        }
+    }
+    /*  remove temp file    */
+    remove((file_name_out + ".temp").c_str());
+}
+
+
 void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
 
     string register_binary, label;
@@ -102,58 +204,6 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
     }
 }
 
-void SecondPass::doSecondPass(){
-
-    string op_code_binary, line, name;
-    size_t opcode;
-    unsigned long current;
-
-    while( getline( (*file), line ) ){
-        count_bits = 0;
-        if(line[0] != ';') {
-            current = line.find_first_not_of("\t ");
-
-            /*  here, we just ignore labels instructions */
-            jumpLabelIns(current, &line);
-
-            if( isalpha(line[current]) ){
-                /*  got a instruction  */
-                current = line.find_first_not_of("\t ");
-                line = line.substr(current, line.size());
-                current = line.find_first_of("\t: ");
-                name = line.substr(0, current);
-
-                if( line.find(".data") != string::npos ){
-                    /*  line has substring .data  */
-                    dotDataIns( name );
-                } else {
-                    /*   write opcode  (5 bits)  */
-                    opcode = Wombat2IS::getInstructionCode( name );
-                    op_code_binary = bitset<5>( opcode ).to_string(); //to binary
-                    mif_out << op_code_binary;
-                    count_bits += 5;
-
-                    /*  instructions that has first reg (3bits) equals zero  */
-                    insertZerosFirstRegIns( opcode );
-                    /*  at this point, we have first line instruction (8bits)  */
-
-                    /*  lets get/insert the second one:  */
-                    line = line.substr( current, line.size() );
-                    insertSecondLineBitsOnFile( line, current );
-
-                    /*   complete with zeros instruction that not fill 16 bits   */
-                    completeWithZeros();
-                }
-                mif_out << "\n";
-            }
-        }
-    }
-    mif_out.close();
-
-    /*  now, we read the file out and just
-     * put the HEX index on instructions  */
-    putIndexOnIns();
-}
 
 void SecondPass::completeWithZeros(){
     while (  count_bits < 16 ){
@@ -199,52 +249,4 @@ void SecondPass::jumpLabelIns( unsigned long current, string* line ) {
         current = (*line).find_first_not_of("\t ");
         (*line) = (*line).substr(current, (*line).size());
     }
-}
-
-void SecondPass::putIndexOnIns(){
-
-
-    ifstream file_temp(file_name_out + ".temp");
-    ofstream file_out(file_name_out);
-    int i ;
-    char *line, *line_next ;
-
-    file_out << "DEPTH = 256\n";
-    file_out << "WIDTH = 16\n";
-    file_out << "ADDRESS_RADIX = HEX\n";
-    file_out << "DATA_RADIX = BIN\n";
-    file_out << "CONTENT\n";
-    file_out << "BEGIN\n\n";
-
-    for( i = 0; i < 256; i++ ){
-        if(!file_temp.eof()){
-            file_temp.getline(line,30);
-
-            if( strlen(line) ){
-                stringstream stream;
-                string index;
-
-                stream << std::setfill ('0') << std::setw(2) << std::hex << i;
-                index = stream.str();
-
-                transform(index.begin(), index.end(), index.begin(), ::toupper);
-
-                file_out << index + "\t\t:\t" + line + "\n";
-            }
-        } else {
-            stringstream stream;
-            string index;
-
-            stream << std::setfill ('0') << std::setw(2) << std::hex << i;
-            index = stream.str();
-
-            transform(index.begin(), index.end(), index.begin(), ::toupper);
-
-            file_out << '[' + stream.str() + "..FF]" + ":\t" + "00000000\n";
-            file_out << "END;";
-            break;
-        }
-    }
-    /*  remove temp file    */
-    remove((file_name_out + ".temp").c_str());
 }

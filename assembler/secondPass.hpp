@@ -23,10 +23,12 @@ private:
     vector< DataTable > data;
     vector< LabelTable > labels;
     int count_bits;
+    void writeOnFinalFile();
+
+    /*      utils    */
     void completeWithZeros();
     void insertZerosFirstRegIns(size_t opcode);
     void dotDataIns(string name);
-    void putIndexOnIns();
     void jumpLabelIns( unsigned long current, string* line );
     void insertSecondLineBitsOnFile(string line, unsigned long current);
 public:
