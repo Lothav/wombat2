@@ -89,10 +89,10 @@ void SecondPass::writeOnFinalFile(){
     int i ;
     char *line, *line_next ;
 
-    file_out << "DEPTH = 256\n";
-    file_out << "WIDTH = 8\n";
-    file_out << "ADDRESS_RADIX = HEX\n";
-    file_out << "DATA_RADIX = BIN\n";
+    file_out << "DEPTH = 256;\n";
+    file_out << "WIDTH = 8;\n";
+    file_out << "ADDRESS_RADIX = HEX;\n";
+    file_out << "DATA_RADIX = BIN;\n";
     file_out << "CONTENT\n";
     file_out << "BEGIN\n\n";
 
@@ -108,10 +108,10 @@ void SecondPass::writeOnFinalFile(){
         if(!file_temp.eof()){
             file_temp.getline(line, sizeof(file_temp));
             if( strlen(line) ){
-                file_out << index + "\t\t:\t" + line + "\n";
+                file_out << index + "        :    " + line + ";\n";
             }
         } else {
-            file_out << '[' + stream.str() + "..FF]" + ":\t" + "00000000\n";
+            file_out << '[' + stream.str() + "..FF]" + "  :    " + "00000000;\n";
             file_out << "END;";
             break;
         }
