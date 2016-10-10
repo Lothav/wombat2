@@ -152,11 +152,8 @@ _[rótulo:] operador [operando(s)] [;comentário]
 \begin_layout Quote
 A instrução deve ter um operador e a quantidade de operandos depende da
  instrução, podendo ter nenhum, um ou dois.
- 
-\end_layout
-
-\begin_layout Quote
-A instrução pode conter um rótulo (label) que deve ser inicializado com
+ Caso haja mais de um, eles devem ser separados por uma vírgula.
+ A instrução pode conter um rótulo (label) que deve ser inicializado com
  com um underscore 
 \begin_inset Quotes eld
 \end_inset
@@ -167,11 +164,7 @@ _
 
  que será responsável por identificar a posição de memória da instrução
  em questão.
- 
-\end_layout
-
-\begin_layout Quote
-Os comentários são opcionais e devem começar com 
+ Os comentários são opcionais e devem começar com 
 \begin_inset Quotes eld
 \end_inset
 
@@ -389,8 +382,7 @@ Com as duas tabelas mapeadas, iniciamos a segunda passada.
 
 \begin_layout Quote
 Percorremos então novamente o arquivo de entrada .a, e, para cada instrução,
- escrevemos em um arquivo temporário(<name.a>.mif.temp) seu respectivo código
- binário.
+ escrevemos em um arquivo temporário seu respectivo código binário.
  Cada instrução tem 16 bits, escritos em duas linhas de 8.
 \end_layout
 
@@ -405,26 +397,22 @@ Após a inserção de todos os 16 bits de cada instrução, nosso arquivo tempor
 \end_layout
 
 \begin_layout Quote
-Abrimos um novo arquivo (definitivo <name.a>.mif), adiciomos o 'header' do
- tipo .mif, o qual, contém informações do tipo tamanho da instrução, formato
- do índice, etc.
+Abrimos um novo arquivo (definitivo), adiciomos o 'header' do tipo .mif,
+ o qual, contém informações do tipo tamanho da instrução, formato do índice,
+ etc.
 \end_layout
 
 \begin_layout Quote
 Colocamos então um índice em hexadecimal (de 00 até FF) crescente no começo
  da linha e seguido de uma parte de instrução (8bits) copiada do arquivo
- temporário até seu EOF.
-\end_layout
-
-\begin_layout Quote
-Então o arquivo temporário é deletado e temos o arquivo final '.mif'
+ temporário.
 \end_layout
 
 \begin_layout Part*
 Tomada de decisão
 \end_layout
 
-\begin_layout Quote
+\begin_layout Standard
 Escolhemos implementar da maneira mais próxima às escolhas apresentadas
  no output do CPUSim:
 \end_layout
@@ -434,57 +422,8 @@ Todas as instruções alocadas de maneira crescente na memória
 \end_layout
 
 \begin_layout Itemize
-Posição de memória escolhida para alocar os labels, são os próprios pc's
- da instruções (em binário)
-\end_layout
-
-\begin_layout Itemize
-As .data são declaradas, no teste apresentado e nos nossos, após as instruções,
- e então, alocadas logo após elas
-\end_layout
-
-\begin_layout Part*
-Código
-\end_layout
-
-\begin_layout Quote
-Como dito na introdução, foi desenvolvido em C++11.
-\end_layout
-
-\begin_layout Quote
-Para compilá-lo, basta executar 
-\emph on
-make 
-\emph default
-na pasta assembler que o arquivo 
-\emph on
-montador
-\emph default
- será gerado (para limpar o executável, utilize make clear)
-\end_layout
-
-\begin_layout Quote
-Para executar, utilize o comando
-\end_layout
-
-\begin_deeper
-\begin_layout Quote
-$ ./montador ../tst/W2-X.a
-\end_layout
-
-\begin_layout Standard
-onde X = 2, 3 ou 4 (cada teste é descrito na próxima seção)
-\end_layout
-
-\end_deeper
-\begin_layout Quote
-Será então gerado o arquivo de mesmo nome .
-\emph on
-mif
-\emph default
- pronto para ser executado no 
-\emph on
-Wombat2
+Posição de memória escolhida para alocar o .data e o label é o próprio pc
+ da instrução (em binário)
 \end_layout
 
 \begin_layout Part*
@@ -515,26 +454,20 @@ Ex: F(0) = 0, F(1) = 1, F(2) = 1, F(3) = 2, F(4) = 3 ...
 \begin_layout Standard
 \begin_inset Graphics
 	filename pasted1.png
+	scale 40
 
 \end_inset
 
- 
-\end_layout
-
-\begin_layout Standard
-F(6) = 8
+ F(6) = 8
 \end_layout
 
 \begin_layout Standard
 \begin_inset Graphics
 	filename pasted3.png
+	scale 40
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
 F(7) = F(6) + F(5) = 8 + 5 = 13
 \end_layout
 
@@ -586,6 +519,7 @@ valor do conceito
 \begin_layout Standard
 \begin_inset Graphics
 	filename pasted4.png
+	scale 40
 
 \end_inset
 
@@ -628,33 +562,14 @@ Recebe M e N e calcula
  utilzando operações de Stack Pointer:
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 \begin_inset Graphics
 	filename pasted5.png
 
 \end_inset
 
- 
-\end_layout
 
-\begin_layout Standard
-\begin_inset Formula $9^{2}$
-\end_inset
-
-= 81
-\end_layout
-
-\end_deeper
-\begin_layout Part*
-Conclusão
-\end_layout
-
-\begin_layout Standard
-Desenvolver o montador para o Wombat2 auxiliou na compreensão e fixação
- das etapas de montagem de 2 etapas (conteúdo visto no capítulo 7).
- A maior dificuldade encontrada foi na elaboração de testes, visto que,
- é o primeiro contato com a linguagem do Wombat2 e trouxe várias dúvidas.
- Após sanadas, o desenvolvimento fluiu bem.
 \end_layout
 
 \end_body

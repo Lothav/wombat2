@@ -87,7 +87,7 @@ void SecondPass::writeOnFinalFile(){
     ifstream file_temp(file_name_out + ".temp");
     ofstream file_out(file_name_out);
     int i ;
-    char *line, *line_next ;
+    char *line;
 
     file_out << "DEPTH = 256;\n";
     file_out << "WIDTH = 8;\n";
@@ -217,7 +217,7 @@ void SecondPass::completeWithZeros(){
 
 void SecondPass::insertZerosFirstRegIns(size_t opcode){
     if(opcode == Wombat2IS::JUMP || opcode == Wombat2IS::MOVESP ||
-       opcode == Wombat2IS::CALL || opcode == Wombat2IS::STORERA || opcode == Wombat2IS::ADDI){
+       opcode == Wombat2IS::CALL || opcode == Wombat2IS::STORERA || opcode == Wombat2IS::LOADRA ){
         mif_out << "000";
         count_bits += 3;
         mif_out << "\n";

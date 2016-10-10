@@ -102,6 +102,33 @@ Para isso, ele deve ser capaz de interpretar o conjunto de 27 instruções
  O trabalho foi implementado na linguagem C++.
 \end_layout
 
+\begin_layout Quotation
+Todo o processo de desenvolvimento pode ser conferido no repositório no
+ GitHub:
+\end_layout
+
+\begin_layout Quotation
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/Luiz0tavio/wombat2"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Quotation
+(alterado de privado para público na data de entrega) na guia 
+\begin_inset Quotes eld
+\end_inset
+
+commits
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part*
 Desenvolvimento
 \end_layout
@@ -395,8 +422,8 @@ Todas as instruções alocadas de maneira crescente na memória
 \end_layout
 
 \begin_layout Itemize
-Posição de memória escolhida para alocar o .data e o label é o próprio pc
- da instrução (em binário)
+Posição de memória escolhida para alocar os .data e os labels, são os próprios
+ pc's da instruções (em binário)
 \end_layout
 
 \begin_layout Part*
@@ -520,5 +547,30 @@ Logo,
 \end_layout
 
 \end_deeper
+\begin_layout Enumerate
+
+\emph on
+Cálculo de Potência utilizando Stack Pointer (W2-4.a):
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Recebe M e N e calcula 
+\begin_inset Formula $M^{N}$
+\end_inset
+
+ utilzando operações de Stack Pointer:
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Graphics
+	filename pasted5.png
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

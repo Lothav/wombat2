@@ -35,8 +35,9 @@ void FirstPass::doFirstPass(void){
 
                 /* wait for exit call
                  * .data step */
-                if(found_exit){
 
+                current = line.find_first_of(".");
+                if(current+1 < line.size() && line[current+1] == 'd'){
                     current = line.find_first_of("0123456789");
                     line = line.substr( current, line.size() );
                     byte_size = atoi( line.c_str() );
@@ -53,17 +54,9 @@ void FirstPass::doFirstPass(void){
                     data.push_back(dat);
 
                     pc += JUMP_2_ADDRS;
-                }
-
-                /* instruction count memory addrs
-                 * watch exit call
-                 * */
-                if(!found_exit){
+                }else{
                     pc += JUMP_2_ADDRS;
-                    if(name.compare("exit") == 0){
-                        //  finish instruction step -> jump to .data step
-                        found_exit = true;
-                    }
+
                 }
             }
             /* found label */
