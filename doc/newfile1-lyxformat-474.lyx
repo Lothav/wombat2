@@ -1,9 +1,7 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
-\save_transient_properties true
-\origin unavailable
 \textclass article
 \begin_preamble
 \usepackage{babel}
@@ -14,16 +12,16 @@
 \language_package default
 \inputencoding iso8859-15
 \fontencoding T1
-\font_roman "default" "default"
-\font_sans "default" "default"
-\font_typewriter "default" "default"
-\font_math "auto" "auto"
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100 100
-\font_tt_scale 100 100
+\font_sf_scale 100
+\font_tt_scale 100
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -75,7 +73,7 @@
 \begin_body
 
 \begin_layout Title
-Trabalho Prático Software Básico - Montador
+Trabalho Prático Software Básico
 \end_layout
 
 \begin_layout Date
@@ -93,14 +91,10 @@ Introdução
 \begin_layout Quotation
 Este trabalho tem o objetivo de implementar um montador de dois passos para
  a máquina Wombat2, como foi visto em sala de aula.
- A partir de um arquivo texto como entrada .a, a função do montador será
- transformar esse programa escrito na linguagem Assembly para um programa
- em linguagem de máquina.
- Foi escolhido o tipo .mif.
-\end_layout
-
-\begin_layout Quotation
-Para isso, ele deve ser capaz de interpretar o conjunto de 27 instruções
+ A partir de um arquivo texto como entrada, a função do montador será transforma
+r esse programa escrito na linguagem Assembly para um programa em linguagem
+ de máquina.
+ Para isso, ele deve ser capaz de interpretar o conjunto de 27 instruções
  fornecidas na documentação, de forma eficiente.
  O trabalho foi implementado na linguagem C++.
 \end_layout
@@ -111,10 +105,6 @@ Desenvolvimento
 
 \begin_layout Quote
 O montador será capaz de interpretar estruções com o seguinte formato:
-\begin_inset Separator latexpar
-\end_inset
-
-
 \end_layout
 
 \begin_deeper
@@ -150,10 +140,6 @@ _
 
 .
  A seguir um exemplo de instrução:
-\begin_inset Separator latexpar
-\end_inset
-
-
 \end_layout
 
 \begin_deeper
@@ -186,10 +172,6 @@ Para o tratamento de referências antecipadas, o montador deve realizar duas
 A pseudo-instrução .data tem a função de reservar uma região da memória da
  máquina.
  Seu formato será:
-\begin_inset Separator latexpar
-\end_inset
-
-
 \end_layout
 
 \begin_deeper
@@ -205,10 +187,6 @@ portanto, ela alocará uma região de tamanho num_bytes com um valor_inicial.
  Essa região poderá ser identificada ao longo do código pelo rótulo label,
  podendo ser acessada a qualquer momento durante sua execução.
  Abaixo temos um exemplo da utilização dessa pseudo-instrução:
-\begin_inset Separator latexpar
-\end_inset
-
-
 \end_layout
 
 \begin_deeper
@@ -273,7 +251,7 @@ exit
 \begin_layout Quote
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features tabularvalignment="middle">
+<features rotate="0" tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <row>
@@ -344,47 +322,19 @@ wombat2
 \end_layout
 
 \begin_layout Quote
-Com as duas tabelas mapeadas, iniciamos a segunda passada.
+Na segunda passada, 
 \end_layout
 
-\begin_layout Quote
-Percorremos então novamente o arquivo de entrada .a, e, para cada instrução,
- escrevemos em um arquivo temporário seu respectivo código binário.
- Cada instrução tem 16 bits, escritos em duas linhas de 8.
+\begin_layout LyX-Code
+
 \end_layout
 
-\begin_layout Quote
-Os 5 primeiros bits são sempre o opcode da instrução.
- O formato dos outros 11 irá depender do opcode.
+\begin_layout LyX-Code
+
 \end_layout
 
-\begin_layout Quote
-Após a inserção de todos os 16 bits de cada instrução, nosso arquivo temporário
- está pronto.
-\end_layout
+\begin_layout LyX-Code
 
-\begin_layout Quote
-Abrimos um novo arquivo (definitivo), adiciomos o 'header' do tipo .mif,
- o qual, contém informações do tipo tamanho da instrução, formato do índice,
- etc.
-\end_layout
-
-\begin_layout Quote
-Colocamos então um índice em hexadecimal (de 00 até FF) crescente no começo
- da linha e seguido de uma parte de instrução (8bits) copiada do arquivo
- temporário.
-\end_layout
-
-\begin_layout Part*
-Tomada de decisão
-\end_layout
-
-\begin_layout Standard
-Escolhemos implementar da maneira mais próxima às escolhas do CPUSim.
-\end_layout
-
-\begin_layout Standard
--> todas as instruções alocadas de maneira crescente na memória
 \end_layout
 
 \end_body
