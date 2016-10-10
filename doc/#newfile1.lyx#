@@ -359,7 +359,20 @@ Os 5 primeiros bits são sempre o opcode da instrução.
 \end_layout
 
 \begin_layout Quote
-Inserimos então 
+Após a inserção de todos os 16 bits de cada instrução, nosso arquivo temporário
+ está pronto.
+\end_layout
+
+\begin_layout Quote
+Abrimos um novo arquivo (definitivo), adiciomos o 'header' do tipo .mif,
+ o qual, contém informações do tipo tamanho da instrução, formato do índice,
+ etc.
+\end_layout
+
+\begin_layout Quote
+Colocamos então um índice em hexadecimal (de 00 até FF) crescente no começo
+ da linha e seguido de uma parte de instrução (8bits) copiada do arquivo
+ temporário.
 \end_layout
 
 \end_body

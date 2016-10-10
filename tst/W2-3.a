@@ -7,17 +7,17 @@
 
 _loop: loadi R0 IO      ;  Valor do conceito
        jmpn R0 _done    ;  Pula para o cálculo do RSG
-	   loadi R1 IO      ;  Créditos da disciplina
+       loadi R1 IO      ;  Créditos da disciplina
 
        add R4 R1        ;  Adiciona os creditos no total de creditos
-	   multiply R0 R1   ;  Multiplica conceito por creditos
-	   add R3 R0        ;  Soma do denominador
+       multiply R0 R1   ;  Multiplica conceito por creditos
+       add R3 R0        ;  Soma do denominador
 
        jump _loop       ;
 
 _done: divide R3 R4     ;  Calcula o RSG
-	   storei R4 IO     ;  Exibe
-	   exit             ;  Termina
+       storei R4 IO     ;  Exibe
+       exit             ;  Termina
 
 zero .data 2 0          ;
 

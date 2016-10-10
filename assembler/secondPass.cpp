@@ -18,6 +18,7 @@ SecondPass::SecondPass(vector< DataTable > data_map,
                        vector< LabelTable > labels_map,
                        ifstream &entrada,
                        string name_out) {
+    stack_pointer = 254;
     file = (&entrada);
     labels = labels_map;
     data = data_map;
@@ -163,6 +164,12 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
         if(current > line.size()) return;
         line = line.substr(current, line.size());
         this->insertSecondLineBitsOnFile(line, current);
+    }
+        /*  stack pointer  */
+    else if(line[current] == 's' && line[current+1] == 'p'){
+        stack_pointer -= 2;
+        register_binary = bitset< 8 >( stack_pointer ).to_string(); //to binary
+        count_bits += 8;
     }
         /*  is .data  */
     else if( isalpha(line[current]) ){

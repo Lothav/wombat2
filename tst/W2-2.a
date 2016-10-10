@@ -8,7 +8,7 @@
     loadi R3 one            ;
     loadi R1 zero           ;
 
-    jmpz R0 _finish        ; jump to finish and print 0 if input = 0
+    jmpz R0 _finish         ; jump to finish and print 0 if input = 0
 
 _loopFib: move R4 R2        ; R4 = aux
     add R2 R3               ; sum last number to current
