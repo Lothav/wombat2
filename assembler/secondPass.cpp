@@ -201,7 +201,9 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
         if(current > line.size()) return;
         label = line.substr(0, current);
 
-        register_binary = bitset< 8 >( atoi(label) ).to_string(); //to binary
+        register_binary = bitset< 8 >( atoi(label.c_str()) ).to_string(); //to binary
+        mif_out << register_binary;
+        count_bits += 8;
     }
 }
 

@@ -1,0 +1,3 @@
+loadc R0 5 ;
+storei R0 IO ;
+exit ;

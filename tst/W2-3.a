@@ -16,7 +16,7 @@ _loop: loadi R0 IO      ;  Valor do conceito
        jump _loop       ;
 
 _done: divide R3 R4     ;  Calcula o RSG
-       storei R4 IO     ;  Exibe
+       storei R3 IO     ;  Exibe
        exit             ;  Termina
 
 zero .data 2 0          ;

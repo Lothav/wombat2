@@ -78,12 +78,9 @@
 Trabalho Prático Software Básico - Montador
 \end_layout
 
-\begin_layout Date
-05/10/2015
-\end_layout
-
 \begin_layout Author
-Rafael Rubbioli Ferreira - Ana Luisa Rodrigues - Luiz Otavio
+Rafael Rubbioli Ferreira - Ana Luisa Rodrigues - Luiz Otavio R.
+ V.
 \end_layout
 
 \begin_layout Part*
@@ -165,21 +162,30 @@ _loop: add R0 R1 ;teste
 \begin_layout Quote
 Para o tratamento de referências antecipadas, o montador deve realizar duas
  passadas pelo código, podendo assim realizar a tradução do programa.
- Na primeira passada, são tratados dois eventos.
- O primeiro evento a ser tratado são os desvios.
- Quando ocorre um desvio no código o montador deve transformar os lables
+ 
+\end_layout
+
+\begin_layout Quote
+Na primeira passada, são tratados dois eventos: 
+\end_layout
+
+\begin_layout Enumerate
+O primeiro evento a ser tratado são os desvios (mapeamento dos labels).
+ Quando ocorre um desvio no código o montador deve transformar os labels
  dos desvios em endereços de PC.
  Para resolver isso, é criada uma tabela para mapear os desvios com seus
  devidos valores de PC.
- O segundo evento a ser tratado são as alocações de memória no final do
- código.
+ 
+\end_layout
+
+\begin_layout Enumerate
+O segundo evento a ser tratado são as alocações de memória no final do código.
  Para resolver isso, foi criada mais uma tabela.
  Essa tabela irá alocar na memória um número de bytes e dar valor à eles.
  Dessa forma, quando a segunda passada começar, os valores de todos os símbolos
  já serão conhecidos, não restando nenhuma referência antecipada e cada
  declaração poderá ser lida, montada e produzida com seu respectivo valor
  e endereço de memória.
- 
 \end_layout
 
 \begin_layout Quote
@@ -376,16 +382,143 @@ Colocamos então um índice em hexadecimal (de 00 até FF) crescente no começo
 \end_layout
 
 \begin_layout Part*
-Tomada de decisão 
+Tomada de decisão
 \end_layout
 
 \begin_layout Standard
-Escolhemos implementar da maneira mais próxima às escolhas do CPUSim.
+Escolhemos implementar da maneira mais próxima às escolhas apresentadas
+ no output do CPUSim:
+\end_layout
+
+\begin_layout Itemize
+Todas as instruções alocadas de maneira crescente na memória
+\end_layout
+
+\begin_layout Itemize
+Posição de memória escolhida para alocar o .data e o label é o próprio pc
+ da instrução (em binário)
+\end_layout
+
+\begin_layout Part*
+Testes
 \end_layout
 
 \begin_layout Standard
--> todas as instruções alocadas de maneira crescente na memória
+Desenvolvemos os seguintes testes:
 \end_layout
 
+\begin_layout Enumerate
+
+\emph on
+Fibonacci Iterativo (W2-2.a) 
+\emph default
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Recebe um número 'n' como entrada e retorna o F(n) (fibonacci de n).
+\end_layout
+
+\begin_layout Standard
+Ex: F(0) = 0, F(1) = 1, F(2) = 1, F(3) = 2, F(4) = 3 ...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pasted1.png
+	scale 40
+
+\end_inset
+
+ F(6) = 8
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pasted3.png
+	scale 40
+
+\end_inset
+
+F(7) = F(6) + F(5) = 8 + 5 = 13
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\emph on
+Cálculo de RSG (W2-3.a) :
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+O RSG é dado pela média ponderada:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\sum(ValorConceito'n'xCréditosConceito'n')}{\sum CréditosConceito'n'}$
+\end_inset
+
+ onde 'n' é uma disciplina.
+\end_layout
+
+\begin_layout Standard
+O programa pedirá duas entradas:
+\end_layout
+
+\begin_layout Enumerate
+valor do conceito
+\end_layout
+
+\begin_layout Enumerate
+créditos da disciplina
+\end_layout
+
+\begin_layout Standard
+Então, pedirá novamente o 
+\emph on
+valor do conceito 
+\emph default
+da próx disciplina.
+\end_layout
+
+\begin_layout Standard
+Irá parar quando receber um número negativo no 
+\emph on
+valor do conceito
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pasted4.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nesse exemplo, foram inseridas 2 disciplinas:
+\end_layout
+
+\begin_layout Enumerate
+VC = 2 e CD = 5
+\end_layout
+
+\begin_layout Enumerate
+VC = 3 e CD = 4
+\end_layout
+
+\begin_layout Standard
+Logo, 
+\begin_inset Formula $\frac{(2*5)+(3*4)}{5+4}$
+\end_inset
+
+= 2.44 ~ 2
+\end_layout
+
+\end_deeper
 \end_body
 \end_document
