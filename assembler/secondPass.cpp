@@ -66,8 +66,7 @@ void SecondPass::doSecondPass(){
 
                     /*  lets get/insert the second one:  */
                     line = line.substr( current, line.size() );
-                    insertSecondLineBitsOnFile( line, current );
-
+                    insertSecondLineBitsOnFile(line, current);
                     /*   complete with zeros instruction that not fill 16 bits   */
                     completeWithZeros();
                 }
@@ -165,12 +164,6 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
         line = line.substr(current, line.size());
         this->insertSecondLineBitsOnFile(line, current);
     }
-        /*  stack pointer  */
-    else if(line[current] == 's' && line[current+1] == 'p'){
-        stack_pointer -= 2;
-        register_binary = bitset< 8 >( stack_pointer ).to_string(); //to binary
-        count_bits += 8;
-    }
         /*  is .data  */
     else if( isalpha(line[current]) ){
 
@@ -200,9 +193,17 @@ void SecondPass::insertSecondLineBitsOnFile(string line, unsigned long current){
         line = line.substr(current, line.size());
         this->insertSecondLineBitsOnFile(line, current);
 
+    }  /*   is numeric  */
+    else if( line[current] == '-' || isdigit(line[current]) ){
+
+        line = line.substr(current, line.size());
+        current = line.find_first_of("\t; ");
+        if(current > line.size()) return;
+        label = line.substr(0, current);
+
+        register_binary = bitset< 8 >( atoi(label) ).to_string(); //to binary
     }
 }
-
 
 void SecondPass::completeWithZeros(){
     while (  count_bits < 16 ){

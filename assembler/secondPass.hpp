@@ -22,7 +22,8 @@ private:
     string file_name_out;
     vector< DataTable > data;
     vector< LabelTable > labels;
-    int count_bits, stack_pointer;
+    int count_bits;
+    int stack_pointer;
     void writeOnFinalFile();
 
     /*      utils    */
