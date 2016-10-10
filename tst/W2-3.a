@@ -1,0 +1,19 @@
+; programa para calcular o RSG
+; quando todas as disciplinas tiverem sido inicializadas digitar um numero negativo
+_start: loadi R0 254 ;valor do conceito 
+		jmpn R0 _done
+		loadi R1 254 ;creditos da disciplina
+		call _loop
+		jump _start
+_loop: add R2 R1 ;adiciona os creditos no total de creditos
+	   multiply R0 R1 ;multiplica conceito por creditos
+	   add R3 R0 ;soma de cima
+	   clear R0
+	   clear R1
+_done: divide R3 R2
+	   storei R3 254
+	   exit  
+
+	  
+
+
