@@ -105,13 +105,14 @@ void SecondPass::writeOnFinalFile(){
         index = stream.str();
 
         transform(index.begin(), index.end(), index.begin(), ::toupper);
+
         if(!file_temp.eof()){
             file_temp.getline(line, sizeof(file_temp));
             if( strlen(line) ){
                 file_out << index + "        :    " + line + ";\n";
             }
         } else {
-            file_out << '[' + stream.str() + "..FF]" + "  :    " + "00000000;\n";
+            file_out << '[' + index + "..FF]" + "  :    " + "00000000;\n";
             file_out << "END;";
             break;
         }

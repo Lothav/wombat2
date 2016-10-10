@@ -14,5 +14,5 @@ size_t findIndex(  string codes[], size_t size, string value ) {
 
 size_t Wombat2IS::getInstructionCode(string code){
     Wombat2IS womb;
-    return findIndex(womb.codes, 26, code);
+    return findIndex(womb.codes, 27, code);
 };

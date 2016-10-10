@@ -33,13 +33,14 @@ public:
             SLT = 16,
             CALL = 17,
             LOADSP = 18,
-            RET = 19,
-            LOADRA = 20,
-            STORERA = 21,
-            ADDI = 22,
-            SGT = 23,
-            SEQ = 24,
-            JMPP = 25;
+            STORESP = 19,
+            RET = 20,
+            LOADRA = 21,
+            STORERA = 22,
+            ADDI = 23,
+            SGT = 24,
+            SEQ = 25,
+            JMPP = 26;
 
 private:
     string codes[27] =
